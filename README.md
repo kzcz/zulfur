@@ -8,8 +8,8 @@ It first obfuscates all the numbers in the code, turning them into 5+3+2+8+.., t
 ## Stage 3 -- Compaction
 Although the name claims to reduce code size, it does the opposite most of the time , it applies the most common way of obfuscation in python, which is marshal of compile, 4 times after different obfuscations, which make the code absurdly hard to recover, if not impossible
 # Bugs
-The class `Stringo` has a bug where it sometimes decides to crash after ast.unparse. It's not common and the cause is unknown.
-similarly with BLD, the class sometimes may break, but is a lot less common
+The class `Stringo` has a bug where it sometimes decides to crash after ast.unparse. It's not common and the cause is unknown. <br/>
+similarly with BLD, the class sometimes may break, but is a lot less common <br/>
 ZLib data can break when node contents of module.body are too large, causing a crash
 # Name references
 ## BLD
