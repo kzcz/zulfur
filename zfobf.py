@@ -3,6 +3,8 @@ import marshal
 import binascii
 import zlib
 import sys
+from _sha1 import sha1 as h1
+h1=lambda b,q=h1:q(b).digest()
 from time import time
 from random import choices as ch,randint as rd
 ant=ast.NodeTransformer
@@ -15,7 +17,7 @@ def mrs(vn,st):
     else:
         l=[vn+'=b""']
     while len(st):
-        i=rd(2,7)
+        i=rd(3,9)
         ci=st[:i]
         st=st[i:]
         l.append(ab+f'{ci!r}')
@@ -24,11 +26,11 @@ def mrs(vn,st):
     n=ast.FunctionDef(name="return_"+vn,body=l,decorator_list=[],args=[],lineno=1)
     return n
 def rid():
-    return bytes(ch(st,k=rd(4,13))).decode()
+    return bytes(ch(st,k=rd(5,10))).decode()
 def trir():
     return rid()+rid()
 def ras(cst=ast.Str):
-    bt=bytes(ch(st2,k=rd(2,7)))
+    bt=bytes(ch(st2,k=rd(2,6)))
     if cst==ast.Str:
         return cst(s=bt.decode())
     return cst(s=bt)
@@ -47,17 +49,19 @@ def befso(e,cst=ast.Str):
     rv=ast.Subscript(value=ast.List(elts=z),slice=ast.Index(value=ast.Num(n=i)),ctx=ast.Load(),lineno=0)
     ast.fix_missing_locations(rv)
     return rv
-def stbj(st):
-    return ast.Call(func=ast.Name(id="bytes"),args=[ast.List(elts=[ast.Num(n=i) for i in st],ctx=ast.Load())],keywords=[])
+def stbj(st,bn):
+    return ast.Call(func=ast.Name(id=bn),args=[ast.List(elts=[ast.Num(n=i) for i in st],ctx=ast.Load())],keywords=[])
 class BLD(ant):
+    def __init__(self,bn):
+        self.bn=bn
     def visit_Bytes(self,node):
-        n=stbj(node.s)
+        n=stbj(node.s,self.bn)
         ast.copy_location(n,node)
         ast.fix_missing_locations(n)
         return n
     def visit_Str(self,node):
         n=node.s.encode("utf-8")
-        n=stbj(n)
+        n=stbj(n,self.bn)
         n=ast.Call(func=ast.Attribute(value=n,attr='decode'),args=[ast.Str(s="utf-8")],keywords=[])
         ast.copy_location(n,node)
         ast.fix_missing_locations(n)
@@ -106,9 +110,16 @@ class Namer(ant):
          return nd
 class Number(ant):
     def visit_Num(sef,node):
-        if 2>node.n:
+        if 9>node.n:
             return node
-        return l2add([ast.Num(n=1)]*node.n)
+        nl=[]
+        while node.n>10:
+            i=rd(2,10)
+            nl.append(i)
+            node.n-=i
+        nl.append(node.n)
+        nl=[ast.Num(n=z) for z in nl]
+        return l2add(nl)
 def stage1(code):
     code=ast.parse(code)
     return ast.unparse(Namer().visit(code))
@@ -119,24 +130,41 @@ def stage2(code):
     sli=trir()
     fni=trir()
     anv=trir()
+    bn=trir()
     coc=ast.ClassDef(name=csn,keywords=[],bases=[],decorator_list=[],body=[ast.FunctionDef(name="__init__",args=ast.arguments(posonlyargs=[],defaults=[],kwonlyargs=[],args=[ast.arg(arg=sli),ast.arg(arg=fni)]),body=[ast.Assign(targets=[ast.Attribute(value=ast.Name(id=sli),attr=fni)],value=ast.Name(id=fni),lineno=1)],decorator_list=[],lineno=1),ast.FunctionDef(name='__truediv__', args=ast.arguments(posonlyargs=[], args=[ast.arg(arg=sli), ast.arg(arg=anv)], kwonlyargs=[], defaults=[]), body=[ast.Return(value=ast.Call(func=ast.Attribute(value=ast.Name(id=sli), attr=fni), args=[ast.Starred(value=ast.Name(id=anv))], keywords=[]))], decorator_list=[],lineno=1)])
     rbi=trir()
     rdi=trir()
     exh=trir()
     gb=trir()
-    l=[f"from binascii import a2b_base64 as {rbi}",f"from zlib import decompress as {rdi}",f"{exh}={csn}(exec)",f"{gb}=globals()"]
+    kn=trir()
+    key=h1(rd(0,256).to_bytes())[0:8]
+    hn=trir()
+    mrt=[0,key]
+    rc=rd(0,256)
+    xv=37
+    l=[f"from binascii import a2b_base64 as {rbi}",f"from zlib import decompress as {rdi}",f"{exh}=exec",f"{gb}=globals()",f"from _sha1 import sha1 as {hn}",f"{hn}=lambda b,c={hn}:c(b).digest()",f"t=[0,{key}]",f"xv=37",f"{kn}=lambda c,z:1/0 if {hn}(repr([t.copy(),t.__setitem__(0,len(t.append(z[0:4])or t)+len(repr(t)))][0]+[c]).encode())!=z else {exh}({rdi}({rbi}(bytes(xv^i for i in c))),{gb})"]
     for e in code.body:
+        nxv=rd(0,256)
+        ecn=trir()
+        ta=[rid(),nxv]
         ci=rid()
         v=ast.unparse(e)
+        v+=f";xv={nxv};t.append({ta})#\033c\033H"
         v=zlib.compress(v.encode())
         v=binascii.b2a_base64(v,newline=0)
-        l.append(f"try:\n\t1/0\nexcept:\n\t{exh}/[{rdi}({rbi}({csn}.return_{ci}())),{gb}]")
+        v=bytes(xv^i for i in v)
+        xv=nxv
+        qv=h1(repr(mrt+[v]).encode())
+        mrt.append(qv[0:4])
+        mrt[0]=len(mrt)+len(repr(mrt))
+        mrt.append(ta)
+        l.append(f"try:\n\t1/0\nexcept:\n\t{csn}({kn})/[{csn}.return_{ci}(),{qv}]")
         coc.body.append(mrs(ci,v))
-    l=[coc]+[ast.parse(e) for e in l]
+    l=[ast.Assign(targets=[ast.Name(id=bn)],value=ast.Name(id="bytes"),lineno=0),coc]+[ast.parse(e) for e in l]
     code.body=l
     code=Stringo().visit(code)
     code=Number().visit(code)
-    code=BLD().visit(code)
+    code=BLD(bn).visit(code)
     code=ast.unparse(code)
     return code
 def comp(code):
@@ -157,7 +185,7 @@ exec(m.loads(b.a2b_base64({code})))
     c=binascii.b2a_base64(c)
     c=f"exec((i:=globals().__getitem__('__builtins__').__getattribute__('__dict__').__getitem__('__import__'))('marshal').__getattribute__('__dict__').__getitem__('loads')(i('zlib').__getattribute__('__dict__').__getitem__('decompress')(i('binascii').__getattribute__('__dict__').__getitem__('a2b_base64')({c}))))"
     c=ast.parse(c)
-    c=BLD().visit(c)
+    c=BLD("bytes").visit(c)
     c=ast.unparse(c)    
     return f'i=__import__;exec(i("marshal").loads(i("zlib").decompress(i("binascii").a2b_base64({binascii.b2a_base64(zlib.compress(marshal.dumps(compile(code,"ZulfurObfuscator","exec"))),newline=0)}))))' #I Love Marshal
 def process(code):
