@@ -27,3 +27,5 @@ BackEndForStringObfuscator
 StringToByteJoiner
 ## l2add
 List to add
+## TSOL
+Chinese translator
