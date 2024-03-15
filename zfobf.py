@@ -6,10 +6,12 @@ import sys
 from _sha1 import sha1 as h1
 h1=lambda b,q=h1:q(b).digest()
 from time import time
-from random import choices as ch,randint as rd
+from random import choices as ch,choice as coo,randint as rd
 ant=ast.NodeTransformer
-st=list(set(range(65,123))-set(range(91,97)))+[ord("_")]
+sod=lambda s,l:set(range(s,s+l))
+st=list(sod(65,58)-sod(91,6))+[ord("_")]
 st2=st+list(range(48,58))
+sai=st2+list((sod(192,256)|sod(452,236)|sod(912,240)|sod(1654,94)|sod(1872,86)|sod(3904,44)|sod(5024,85)|sod(5121,639)|sod(6016,52)|sod(6917,47)|sod(7680,272)|sod(8544,41)|sod(11264,238))-{215,247,930,1014,5741,5742,3912,11493,11494,11495,11496,11497,11498})
 def mrs(vn,st):
     ab=f'{vn}+='
     if type(st)==str:
@@ -26,7 +28,7 @@ def mrs(vn,st):
     n=ast.FunctionDef(name="return_"+vn,body=l,decorator_list=[],args=[],lineno=1)
     return n
 def rid():
-    return bytes(ch(st,k=rd(5,10))).decode()
+    return chr(coo(st))+"".join(chr(i) for i in ch(sai,k=rd(2,10)))
 def trir():
     return rid()+rid()
 def ras(cst=ast.Str):
@@ -51,6 +53,13 @@ def befso(e,cst=ast.Str):
     return rv
 def stbj(st,bn):
     return ast.Call(func=ast.Name(id=bn),args=[ast.List(elts=[ast.Num(n=i) for i in st],ctx=ast.Load())],keywords=[])
+def ite(ifn):
+    if ifn.orelse==[]:
+        exh=[ast.ExceptHandler(type=ast.Name(id="BaseException"),body=[ast.Pass()])]
+    else:
+        ifn.orelse[0]=IF2E().visit(ifn.orelse[0])
+        exh=[ast.ExceptHandler(body=ifn.orelse,type=ast.Name(id="OverflowError"))]
+    return ast.Try(body=[ast.Expr(value=ast.Call(func=ast.Attribute(value=ast.BinOp(left=ast.Call(func=ast.Name(id="bool"),args=[ifn.test],keywords=[]),op=ast.Sub(),right=ast.Num(n=1)),attr="to_bytes"),args=[],keywords=[]))],handlers=exh,orelse=ifn.body,finalbody=[])
 class BLD(ant):
     def __init__(self,bn):
         self.bn=bn
@@ -91,10 +100,16 @@ class Namer(ant):
             nt=type(n)
             if nt == ast.Name:
                 self.cnn(n,"id")
-            if nt in [ast.ClassDef,ast.FunctionDef]:
+            if nt in [ast.ClassDef,ast.FunctionDef,ast.AsyncFunctionDef]:
                 self.cnn(n,"name")
             if nt == ast.arg:
                 self.cnn(n,"arg")
+            if nt == ast.Global:
+                for cp,nm in enumerate(n.names):
+                    if (nm not in self.tfd)and(nm not in __builtins__.__dict__):
+                        self.tfd[nm]=rid()
+                    if nm in self.tfd:
+                        n.names[cp]=self.tfd[nm]
             if nt in [ast.Import,ast.ImportFrom]:
                 for al in n.names:
                     if al.asname==None:
@@ -102,15 +117,30 @@ class Namer(ant):
                     self.cnn(al,"asname")
         return nd
     def cnn(self,nd,atn):
-         q=nd.__getattribute__(atn)
-         if (q not in self.tfd)and(q not in __builtins__.__dict__):
-             self.tfd[q]=rid()
-         if q in self.tfd:
-             nd.__setattr__(atn,self.tfd[q])
-         return nd
+        q=nd.__getattribute__(atn)
+        if (q not in self.tfd)and(q not in __builtins__.__dict__):
+            self.tfd[q]=rid()
+        if q in self.tfd:
+            nd.__setattr__(atn,self.tfd[q])
+        return nd
+class TSOL(ant):
+    td={ord(j):chr(int(i*3.8)+65) for i,j in enumerate('0123456789abcdef')}
+    def visit_Bytes(self,node):
+        x=node.s.hex().translate(self.td).encode()
+        nn=ast.Call(func=ast.Name(id="dc"),keywords=[],args=[ast.Str(s="".join([chr(int.from_bytes(bytes(w),"big")) for w in zip(x[::2],x[1::2])]))])
+        ast.copy_location(nn,node)
+        ast.fix_missing_locations(nn)
+        return nn
+    def visit_Str(self,node):
+        nn=ast.Call(func=ast.Attribute(value=self.visit_Bytes(ast.Bytes(s=node.s.encode())),attr="decode"),args=[],keywords=[])
+        ast.copy_location(nn,node)
+        ast.fix_missing_locations(nn)
+        return nn
 class Number(ant):
     def visit_Num(sef,node):
         if 9>node.n:
+            return node
+        if node.n>2000:
             return node
         nl=[]
         while node.n>10:
@@ -120,9 +150,17 @@ class Number(ant):
         nl.append(node.n)
         nl=[ast.Num(n=z) for z in nl]
         return l2add(nl)
+class IF2E(ant):
+    def visit_If(self,node):
+        nn=ite(node)
+        ast.copy_location(nn,node)
+        return nn
 def stage1(code):
     code=ast.parse(code)
-    return ast.unparse(Namer().visit(code))
+    print("Stage 1")
+    code=TSOL().visit(IF2E().visit(Namer().visit(code)))
+    code.body.insert(0,ast.parse("dc=lambda z,td={int(i*3.8)+65:j for i,j in enumerate('0123456789abcdef')}:bytes.fromhex(b\"\".join(ord(c).to_bytes(2,\"big\") for c in z).decode().translate(td))"))
+    return ast.unparse(code)
 def stage2(code):
     code=ast.parse(code)
     code=Number().visit(code)
@@ -142,8 +180,12 @@ def stage2(code):
     mrt=[0,key]
     rc=rd(0,256)
     xv=37
-    l=[f"from binascii import a2b_base64 as {rbi}",f"from zlib import decompress as {rdi}",f"{exh}=exec",f"{gb}=globals()",f"from _sha1 import sha1 as {hn}",f"{hn}=lambda b,c={hn}:c(b).digest()",f"t=[0,{key}]",f"xv=37",f"{kn}=lambda c,z:1/0 if {hn}(repr([t.copy(),t.__setitem__(0,len(t.append(z[0:4])or t)+len(repr(t)))][0]+[c]).encode())!=z else {exh}({rdi}({rbi}(bytes(xv^i for i in c))),{gb})"]
+    l=[f"from binascii import a2b_base64 as {rbi}",f"from zlib import decompress as {rdi}",f"{exh}=exec",f"{gb}=globals()",f"from _sha1 import sha1 as {hn}",f"{hn}=lambda b,c={hn}:c(b).digest()",f"t=[0,{key}]",f"xv=37",f"{kn}=lambda c,z:1/0 if {hn}(repr([t.copy(),t.__setitem__(0,len(t.append(z[0:4])or t)+len(repr(t)))][0]+[c]).encode())!=z else {exh}({rdi}({rbi}(bytes(xv^i for i in c))).decode(),{gb})"]
+    lcb=len(code.body)
+    itr=1
     for e in code.body:
+        print(f"Converting node {itr}/{lcb}")
+        itr+=1
         nxv=rd(0,256)
         ecn=trir()
         ta=[rid(),nxv]
@@ -158,35 +200,36 @@ def stage2(code):
         mrt.append(qv[0:4])
         mrt[0]=len(mrt)+len(repr(mrt))
         mrt.append(ta)
-        l.append(f"try:\n\t1/0\nexcept:\n\t{csn}({kn})/[{csn}.return_{ci}(),{qv}]")
+        l.append(f"try:\n\traise SyntaxError('Invalid syntax.')\nexcept:\n\t{csn}({kn})/[{csn}.return_{ci}(),{qv}]")
         coc.body.append(mrs(ci,v))
     l=[ast.Assign(targets=[ast.Name(id=bn)],value=ast.Name(id="bytes"),lineno=0),coc]+[ast.parse(e) for e in l]
     code.body=l
+    print("Stringo - 1/3")
     code=Stringo().visit(code)
+    print("Number - 2/3")
     code=Number().visit(code)
+    print("BLD - 3/3")
     code=BLD(bn).visit(code)
+    print("Unparse")
     code=ast.unparse(code)
+    code="""#===============================#
+# Code Obfuscated by Zulfur Obfuscator V1.2
+# https://github.com/kzcz/zulfur
+# Good luck deobfuscating it
+#===============================#
+"""+code+"\n\n# Cursed, right? Get Zulfur at https://github.com/kzcz/zulfur"
     return code
 def comp(code):
-    code=marshal.dumps(compile(code,trir(),"exec"))
-    code=binascii.b2a_base64(code)
-    code=f"""
-import marshal as m
-import binascii as b
-exec(m.loads(b.a2b_base64({code})))
-"""
-    code=ast.parse(code)
-    code=Namer().visit(code)
-    code=ast.unparse(code)
-    c=ast.parse(f'i=__import__;exec(i("marshal").loads(i("zlib").decompress(i("binascii").a2b_base64({binascii.b2a_base64(zlib.compress(marshal.dumps(compile(code,"ZulfurObfuscator","exec"))),newline=0)}))))')
-    c=compile(c,"ZulfurObfuscator","exec")
+    print("Packing - 1/2")
+    c=compile(code,"ZulfurObfuscator","exec")
     c=marshal.dumps(c)
     c=zlib.compress(c)
     c=binascii.b2a_base64(c)
     c=f"exec((i:=globals().__getitem__('__builtins__').__getattribute__('__dict__').__getitem__('__import__'))('marshal').__getattribute__('__dict__').__getitem__('loads')(i('zlib').__getattribute__('__dict__').__getitem__('decompress')(i('binascii').__getattribute__('__dict__').__getitem__('a2b_base64')({c}))))"
     c=ast.parse(c)
     c=BLD("bytes").visit(c)
-    c=ast.unparse(c)    
+    c=ast.unparse(c)
+    print("Packing - 2/2")
     return f'i=__import__;exec(i("marshal").loads(i("zlib").decompress(i("binascii").a2b_base64({binascii.b2a_base64(zlib.compress(marshal.dumps(compile(code,"ZulfurObfuscator","exec"))),newline=0)}))))' #I Love Marshal
 def process(code):
     return stage2(stage1(code))
@@ -206,7 +249,7 @@ if __name__=="__main__":
         ts=time()
         fc=process(fc)
     except BaseException as e:
-        sys.exit(e)
+        raise e
     else:
         print(f"Obfuscation took {time()-ts:.2f}s.")
     if input(f"Pack (Marshal) file? This will need the file be ran on Python version {'.'.join(str(i) for i in sys.version_info[0:3])} : ").strip().lower() in {"y","yes"}:
