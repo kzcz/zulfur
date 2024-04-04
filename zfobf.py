@@ -7,7 +7,9 @@ from _sha1 import sha1 as h1
 h1=lambda b,q=h1:q(b).digest()
 from time import time
 from random import choices as ch,choice as coo,randint as rd
+vb=vars(__builtins__)
 ant=ast.NodeTransformer
+anw=[i for i,j in vb.items() if isinstance(j,type)]
 sod=lambda s,l:set(range(s,s+l))
 st=list(sod(65,58)-sod(91,6))+[ord("_")]
 st2=st+list(range(48,58))
@@ -19,7 +21,7 @@ def mrs(vn,st):
     else:
         l=[vn+'=b""']
     while len(st):
-        i=rd(3,9)
+        i=rd(3,10)
         ci=st[:i]
         st=st[i:]
         l.append(ab+f'{ci!r}')
@@ -28,14 +30,67 @@ def mrs(vn,st):
     n=ast.FunctionDef(name="return_"+vn,body=l,decorator_list=[],args=[],lineno=1)
     return n
 def rid():
-    return chr(coo(st))+"".join(chr(i) for i in ch(sai,k=rd(2,10)))
-def trir():
-    return rid()+rid()
+    return chr(coo(st))+"".join(chr(i) for i in ch(sai,k=rd(2,7)))
 def ras(cst=ast.Str):
     bt=bytes(ch(st2,k=rd(2,6)))
     if cst==ast.Str:
         return cst(s=bt.decode())
     return cst(s=bt)
+def rvg():
+    zz=rd(0,2)
+    if zz==0:
+        return ras(ast.Bytes)
+    if zz==1:
+        return ras()
+    return ast.Num(n=rd(0,1048576))
+def noise(body,pon=0.32):
+    l=len(body)
+    a=l*(1-pon)
+    i=l
+    while (i>0):
+        qz=rd(0,1)
+        if qz==0:
+            z=ast.AnnAssign(target=ast.Name(id=rid()),annotation=ast.Name(id=coo(anw)),simple=1)
+            if rd(0,100)>=40:
+                z.value=rvg()
+        else:
+            z=rvg()
+            if rd(0,100)>=45:
+                z=ast.Assign(targets=[ast.Name(id=rid())],value=z,lineno=0)
+            else:
+                z=ast.Expr(value=z)
+        body.insert(int(i),z)
+        i-=a
+def ftw(fbo):
+    vn=fbo.target
+    itn=ast.Name(id=rid())
+    bkv=ast.Name(id=rid())
+    return [ast.Assign(targets=[bkv],value=ast.Num(n=0),lineno=0),ast.Assign(targets=[itn],value=ast.Call(func=ast.Name(id="iter"),args=[fbo.iter],keywords=[]),lineno=0),ast.While(test=ast.Num(n=1),body=[ast.Try(body=[ast.Assign(targets=[vn],value=ast.Call(func=ast.Name(id="next"),args=[itn],keywords=[]),lineno=0)]+fbo.body,handlers=[ast.ExceptHandler(type=ast.Name(id="StopIteration"),body=[ast.Assign(targets=[bkv],value=ast.Num(n=1),lineno=0),ast.Break()])],orelse=[],finalbody=[])],orelse=[]),ast.If(test=bkv,body=fbo.orelse,orelse=[])]
+def ftf(body):
+    for i in body:
+        if "body" in i._fields:
+            ftf(i.body)
+        if "orelse" in i._fields:
+            ftf(i.orelse)
+        if "handlers" in i._fields:
+            for j in i.handlers:
+                ftf(j.body)
+        if isinstance(i,ast.For):
+            r=ftw(i)[::-1]
+            q=body.index(i)
+            body.pop(q)
+            for j in r:
+                body.insert(q,j)
+def tna(body):
+    for i in body:
+        if "body" in i._fields:
+            tna(i.body)
+        if "orelse" in i._fields:
+            tna(i.orelse)
+        if "handlers" in i._fields:
+            for j in i.handlers:
+                tna(j.body)
+    noise(body)
 def l2add(ls):
     if len(ls)<1:
         return ls
@@ -63,6 +118,8 @@ def ite(ifn):
 class BLD(ant):
     def __init__(self,bn):
         self.bn=bn
+    def visit_JoinedStr(self,node):
+        return node
     def visit_Bytes(self,node):
         n=stbj(node.s,self.bn)
         ast.copy_location(n,node)
@@ -76,6 +133,8 @@ class BLD(ant):
         ast.fix_missing_locations(n)
         return n
 class Stringo(ant):
+    def visit_JoinedStr(self,node):
+        return node
     def visit_Str(self,node,cst=ast.Str):
         if len(node.s)<1:
             return node
@@ -100,13 +159,13 @@ class Namer(ant):
             nt=type(n)
             if nt == ast.Name:
                 self.cnn(n,"id")
-            if nt in [ast.ClassDef,ast.FunctionDef,ast.AsyncFunctionDef]:
+            if nt in [ast.ClassDef,ast.FunctionDef,ast.AsyncFunctionDef,ast.ExceptHandler]:
                 self.cnn(n,"name")
             if nt == ast.arg:
                 self.cnn(n,"arg")
             if nt == ast.Global:
                 for cp,nm in enumerate(n.names):
-                    if (nm not in self.tfd)and(nm not in __builtins__.__dict__):
+                    if (nm not in self.tfd)and(nm not in vb):
                         self.tfd[nm]=rid()
                     if nm in self.tfd:
                         n.names[cp]=self.tfd[nm]
@@ -118,7 +177,7 @@ class Namer(ant):
         return nd
     def cnn(self,nd,atn):
         q=nd.__getattribute__(atn)
-        if (q not in self.tfd)and(q not in __builtins__.__dict__):
+        if (q not in self.tfd)and(q not in vb):
             self.tfd[q]=rid()
         if q in self.tfd:
             nd.__setattr__(atn,self.tfd[q])
@@ -131,6 +190,8 @@ class TSOL(ant):
         ast.copy_location(nn,node)
         ast.fix_missing_locations(nn)
         return nn
+    def visit_JoinedStr(self,node):
+        return node
     def visit_Str(self,node):
         nn=ast.Call(func=ast.Attribute(value=self.visit_Bytes(ast.Bytes(s=node.s.encode())),attr="decode"),args=[],keywords=[])
         ast.copy_location(nn,node)
@@ -159,35 +220,28 @@ def stage1(code):
     code=ast.parse(code)
     print("Stage 1")
     code=TSOL().visit(IF2E().visit(Namer().visit(code)))
-    code.body.insert(0,ast.parse("dc=lambda z,td={int(i*3.8)+65:j for i,j in enumerate('0123456789abcdef')}:bytes.fromhex(b\"\".join(ord(c).to_bytes(2,\"big\") for c in z).decode().translate(td))"))
+    print("Noise")
+    tna(code.body)
+    ftf(code.body)
+    code.body.insert(0,ast.parse("dc=lambda z,td={int(i*3.8)+65:j for i,j in enumerate('0123456789abcdef')}:bytes.fromhex(b\"\".join(ord(c).to_bytes(2,\"big\") for c in z).decode().translate(td))").body[0])
     return ast.unparse(code)
 def stage2(code):
     code=ast.parse(code)
     code=Number().visit(code)
-    csn=trir()
-    sli=trir()
-    fni=trir()
-    anv=trir()
-    bn=trir()
+    csn,sli,fni,anv,bn,rbi,rdi,exh,gb,kn,hn=[rid() for i in range(11)]
     coc=ast.ClassDef(name=csn,keywords=[],bases=[],decorator_list=[],body=[ast.FunctionDef(name="__init__",args=ast.arguments(posonlyargs=[],defaults=[],kwonlyargs=[],args=[ast.arg(arg=sli),ast.arg(arg=fni)]),body=[ast.Assign(targets=[ast.Attribute(value=ast.Name(id=sli),attr=fni)],value=ast.Name(id=fni),lineno=1)],decorator_list=[],lineno=1),ast.FunctionDef(name='__truediv__', args=ast.arguments(posonlyargs=[], args=[ast.arg(arg=sli), ast.arg(arg=anv)], kwonlyargs=[], defaults=[]), body=[ast.Return(value=ast.Call(func=ast.Attribute(value=ast.Name(id=sli), attr=fni), args=[ast.Starred(value=ast.Name(id=anv))], keywords=[]))], decorator_list=[],lineno=1)])
-    rbi=trir()
-    rdi=trir()
-    exh=trir()
-    gb=trir()
-    kn=trir()
     key=h1(rd(0,256).to_bytes())[0:8]
-    hn=trir()
     mrt=[0,key]
     rc=rd(0,256)
-    xv=37
-    l=[f"from binascii import a2b_base64 as {rbi}",f"from zlib import decompress as {rdi}",f"{exh}=exec",f"{gb}=globals()",f"from _sha1 import sha1 as {hn}",f"{hn}=lambda b,c={hn}:c(b).digest()",f"t=[0,{key}]",f"xv=37",f"{kn}=lambda c,z:1/0 if {hn}(repr([t.copy(),t.__setitem__(0,len(t.append(z[0:4])or t)+len(repr(t)))][0]+[c]).encode())!=z else {exh}({rdi}({rbi}(bytes(xv^i for i in c))).decode(),{gb})"]
+    xv=rd(0,256)
+    l=[f"from binascii import a2b_base64 as {rbi}",f"from zlib import decompress as {rdi}",f"{exh}=exec",f"{gb}=globals()",f"from _sha1 import sha1 as {hn}",f"{hn}=lambda b,c={hn}:c(b).digest()",f"t=[0,{key}]",f"xv={xv}",f"{kn}=lambda c,z:1/0 if {hn}(repr([t.copy(),t.__setitem__(0,len(t.append(z[0:4])or t)+len(repr(t)))][0]+[c]).encode())!=z else {exh}({rdi}({rbi}(bytes(xv^i for i in c))).decode(),{gb})"]
     lcb=len(code.body)
     itr=1
     for e in code.body:
         print(f"Converting node {itr}/{lcb}")
         itr+=1
-        nxv=rd(0,256)
-        ecn=trir()
+        nxv=rd(0,255)
+        ecn=rid()
         ta=[rid(),nxv]
         ci=rid()
         v=ast.unparse(e)
@@ -213,7 +267,7 @@ def stage2(code):
     print("Unparse")
     code=ast.unparse(code)
     code="""#===============================#
-# Code Obfuscated by Zulfur Obfuscator V1.2
+# Code Obfuscated by Zulfur Obfuscator V1.4
 # https://github.com/kzcz/zulfur
 # Good luck deobfuscating it
 #===============================#
@@ -232,7 +286,7 @@ def comp(code):
     print("Packing - 2/2")
     return f'i=__import__;exec(i("marshal").loads(i("zlib").decompress(i("binascii").a2b_base64({binascii.b2a_base64(zlib.compress(marshal.dumps(compile(code,"ZulfurObfuscator","exec"))),newline=0)}))))' #I Love Marshal
 def process(code):
-    return stage2(stage1(code))
+    return stage1(code)
 if __name__=="__main__":
     f=input("Enter file to obfuscate: ").strip()
     if not f.endswith(".py"):
