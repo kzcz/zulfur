@@ -1,34 +1,58 @@
+import os
 import ast
 import marshal
 import binascii
 import zlib
 import sys
 from _sha1 import sha1 as h1
-h1=lambda b,q=h1:q(b).digest()
-from time import time
+from time import perf_counter as time
 from random import choices as ch,choice as coo,randint as rd
-vb=vars(__builtins__)
+op=os.path
+vb=vars(__import__("builtins"))
+gta=lambda a,b:object.__getattribute__(a,b)
+gpi=lambda txt:input(txt).lower().strip()
+qtp=lambda *a,**k:0
+pbz=lambda c:ast.parse(c).body[0]
+h1=lambda b,q=h1:q(b).digest()
+fac=lambda n,o:[ast.copy_location(n,o),ast.fix_missing_locations(n)]
+ft=type(gta)
+ct=type(gta.__code__)
+ptv=["yes","w","h","y","1"]
+pfv=["no","n","l","0"]
+bft=type(id)
+mip="Filename must end in .py"
+pl=["argcount","posonlyargcount","kwonlyargcount","nlocals","stacksize","flags","code","consts","names","varnames","filename","name","qualname","firstlineno","linetable","exceptiontable","freevars","cellvars"]
+atz=["file","out"]
+link="https://github.com/kzcz/zulfur"
+l0="(lambda:0)"
+dfn=f"type{l0}"
+dcn=f"type({l0}.__code__)"
+valpha,vbeta,vrels=(2,1,0)
+ver=(1,5,vrels)
+stver='.'.join(str(v) for v in ver[0:2])
+dver=f"V{stver} ({['Release','Beta','Alpha'][ver[2]]})"
+wca=lambda c:f"#===============================#\n# Code Obfuscated by Zulfur Obfuscator V{stver}\n# {link}\n# Good luck deobfuscating it\n#===============================#\n\n{c}\n\n# Cursed, right? Get Zulfur at {link}"
 ant=ast.NodeTransformer
 anw=[i for i,j in vb.items() if isinstance(j,type)]
 sod=lambda s,l:set(range(s,s+l))
 st=list(sod(65,58)-sod(91,6))+[ord("_")]
 st2=st+list(range(48,58))
-sai=st2+list((sod(192,256)|sod(452,236)|sod(912,240)|sod(1654,94)|sod(1872,86)|sod(3904,44)|sod(5024,85)|sod(5121,639)|sod(6016,52)|sod(6917,47)|sod(7680,272)|sod(8544,41)|sod(11264,238))-{215,247,930,1014,5741,5742,3912,11493,11494,11495,11496,11497,11498})
-def mrs(vn,st):
-    ab=f'{vn}+='
-    if type(st)==str:
-        l=[vn+'=""']
-    else:
-        l=[vn+'=b""']
-    while len(st):
-        i=rd(3,10)
-        ci=st[:i]
-        st=st[i:]
-        l.append(ab+f'{ci!r}')
-    l=[ast.parse(x).body[0] for x in l]
-    l.append(ast.Return(value=ast.Name(id=vn)))
-    n=ast.FunctionDef(name="return_"+vn,body=l,decorator_list=[],args=[],lineno=1)
-    return n
+sai=st2+list((sod(192,256)|sod(452,236)|sod(912,240)|sod(1654,94)|sod(1872,86)|sod(3904,44)|sod(5024,85)|sod(5121,639)|sod(6016,52)|sod(6917,47)|sod(7680,272)|sod(8544,41)|sod(11264,238))-sod(11493,6)-{215,247,930,1014,5741,5742,3912})
+class litr:
+    def __init__(self,a):
+        self.a=a
+    def __repr__(self):
+        return self.a
+def cotc(co,cn=dcn):
+    dv={k:gta(co,"co_"+k) for k in pl}
+    cst=list(dv["consts"])
+    for i,v in enumerate(cst):
+        if type(v)==ct:
+            cst[i]=litr(cotc(v,cn))
+    dv["consts"]=tuple(cst)
+    return f"{cn}{tuple(dv.values())}"
+def fdtc(fd,fn=dfn,cn=dcn):
+    return f"{fn}({cotc(fd.__code__,cn)},globals(),{fd.__name__!r})"
 def rid():
     return chr(coo(st))+"".join(chr(i) for i in ch(sai,k=rd(2,7)))
 def ras(cst=ast.Str):
@@ -48,24 +72,20 @@ def noise(body,pon=0.32):
     a=l*(1-pon)
     i=l
     while (i>0):
-        qz=rd(0,1)
+        qz=rd(0,2)
         if qz==0:
-            z=ast.AnnAssign(target=ast.Name(id=rid()),annotation=ast.Name(id=coo(anw)),simple=1)
-            if rd(0,100)>=40:
-                z.value=rvg()
+            z=ast.AnnAssign(target=ast.Name(id=rid()),annotation=ast.Name(id=coo(anw)),value=rvg(),simple=1)
+        elif qz==1:
+            z=ast.Assign(targets=[ast.Name(id=rid())],value=rvg(),lineno=0)
         else:
-            z=rvg()
-            if rd(0,100)>=45:
-                z=ast.Assign(targets=[ast.Name(id=rid())],value=z,lineno=0)
-            else:
-                z=ast.Expr(value=z)
+            z=ast.Expr(value=rvg())
         body.insert(int(i),z)
         i-=a
 def ftw(fbo):
     vn=fbo.target
     itn=ast.Name(id=rid())
     bkv=ast.Name(id=rid())
-    return [ast.Assign(targets=[bkv],value=ast.Num(n=0),lineno=0),ast.Assign(targets=[itn],value=ast.Call(func=ast.Name(id="iter"),args=[fbo.iter],keywords=[]),lineno=0),ast.While(test=ast.Num(n=1),body=[ast.Try(body=[ast.Assign(targets=[vn],value=ast.Call(func=ast.Name(id="next"),args=[itn],keywords=[]),lineno=0)]+fbo.body,handlers=[ast.ExceptHandler(type=ast.Name(id="StopIteration"),body=[ast.Assign(targets=[bkv],value=ast.Num(n=1),lineno=0),ast.Break()])],orelse=[],finalbody=[])],orelse=[]),ast.If(test=bkv,body=fbo.orelse,orelse=[])]
+    return [ast.Assign(targets=[bkv],value=ast.Num(n=0),lineno=0),ast.Assign(targets=[itn],value=ast.Call(func=ast.Name(id="iter"),args=[fbo.iter],keywords=[]),lineno=0),ast.While(test=ast.Num(n=1),body=[ast.Try(body=[ast.Assign(targets=[vn],value=ast.Call(func=ast.Name(id="next"),args=[itn],keywords=[]),lineno=0)]+fbo.body,handlers=[ast.ExceptHandler(type=ast.Name(id="StopIteration"),body=[ast.Assign(targets=[bkv],value=ast.Num(n=1),lineno=0),ast.Break()])],orelse=[],finalbody=[])],orelse=[])]+([ast.If(test=bkv,body=fbo.orelse,orelse=[])] if fbo.orelse else [])
 def ftf(body):
     for i in body:
         if "body" in i._fields:
@@ -104,17 +124,33 @@ def befso(e,cst=ast.Str):
     z=[ras(cst) for i in range(j)]
     z.insert(i,e)
     rv=ast.Subscript(value=ast.List(elts=z),slice=ast.Index(value=ast.Num(n=i)),ctx=ast.Load(),lineno=0)
-    ast.fix_missing_locations(rv)
     return rv
 def stbj(st,bn):
     return ast.Call(func=ast.Name(id=bn),args=[ast.List(elts=[ast.Num(n=i) for i in st],ctx=ast.Load())],keywords=[])
 def ite(ifn):
+    exh=ast.ExceptHandler(type=ast.Name(id="ZeroDivisionError"))
     if ifn.orelse==[]:
-        exh=[ast.ExceptHandler(type=ast.Name(id="BaseException"),body=[ast.Pass()])]
+        exh.body=[ast.Pass()]
     else:
-        ifn.orelse[0]=IF2E().visit(ifn.orelse[0])
-        exh=[ast.ExceptHandler(body=ifn.orelse,type=ast.Name(id="OverflowError"))]
-    return ast.Try(body=[ast.Expr(value=ast.Call(func=ast.Attribute(value=ast.BinOp(left=ast.Call(func=ast.Name(id="bool"),args=[ifn.test],keywords=[]),op=ast.Sub(),right=ast.Num(n=1)),attr="to_bytes"),args=[],keywords=[]))],handlers=exh,orelse=ifn.body,finalbody=[])
+        exh.body=IF2E().visit(ast.Module(body=ifn.orelse)).body
+    return ast.Try(body=[ast.Expr(value=ast.BinOp(left=ast.Num(n=1),op=ast.Div(),right=ast.UnaryOp(op=ast.Not(),operand=ifn.test,keywords=[])))],handlers=[exh],orelse=ifn.body,finalbody=[])
+class FTO(ant):
+    def __init__(self,fn,cn):
+        self.fn=fn
+        self.cn=cn
+    def visit_Lambda(self,node):
+        f=pbz(fdtc(eval(ast.unparse(node)),self.fn,self.cn)).value
+        fac(f,node)
+        return f
+    def visit_AsyncFunctionDef(self,node):
+        return self.visit_FunctionDef(node)
+    def visit_FunctionDef(self,node):
+        d={}
+        n=node.name
+        exec(ast.unparse(node),globals(),d)
+        f=pbz(f"{n}={fdtc(*d.values(),self.fn,self.cn)}")
+        fac(f,node)
+        return f
 class BLD(ant):
     def __init__(self,bn):
         self.bn=bn
@@ -122,15 +158,13 @@ class BLD(ant):
         return node
     def visit_Bytes(self,node):
         n=stbj(node.s,self.bn)
-        ast.copy_location(n,node)
-        ast.fix_missing_locations(n)
+        fac(n,node)
         return n
     def visit_Str(self,node):
         n=node.s.encode("utf-8")
         n=stbj(n,self.bn)
         n=ast.Call(func=ast.Attribute(value=n,attr='decode'),args=[ast.Str(s="utf-8")],keywords=[])
-        ast.copy_location(n,node)
-        ast.fix_missing_locations(n)
+        fac(n,node)
         return n
 class Stringo(ant):
     def visit_JoinedStr(self,node):
@@ -146,8 +180,7 @@ class Stringo(ant):
             l.append(ta)
             node.s=node.s[i:]
         rn=l2add(l)
-        ast.copy_location(rn,node)
-        ast.fix_missing_locations(rn)
+        fac(rn,node)
         return rn
     def visit_Bytes(self,node):
         return self.visit_Str(node,ast.Bytes)
@@ -159,7 +192,10 @@ class Namer(ant):
             nt=type(n)
             if nt == ast.Name:
                 self.cnn(n,"id")
-            if nt in [ast.ClassDef,ast.FunctionDef,ast.AsyncFunctionDef,ast.ExceptHandler]:
+            if nt == ast.ExceptHandler:
+                if n.type:
+                    self.cnn(n,"name")
+            if nt in [ast.ClassDef,ast.FunctionDef,ast.AsyncFunctionDef]:
                 self.cnn(n,"name")
             if nt == ast.arg:
                 self.cnn(n,"arg")
@@ -187,15 +223,13 @@ class TSOL(ant):
     def visit_Bytes(self,node):
         x=node.s.hex().translate(self.td).encode()
         nn=ast.Call(func=ast.Name(id="dc"),keywords=[],args=[ast.Str(s="".join([chr(int.from_bytes(bytes(w),"big")) for w in zip(x[::2],x[1::2])]))])
-        ast.copy_location(nn,node)
-        ast.fix_missing_locations(nn)
+        fac(nn,node)
         return nn
     def visit_JoinedStr(self,node):
         return node
     def visit_Str(self,node):
         nn=ast.Call(func=ast.Attribute(value=self.visit_Bytes(ast.Bytes(s=node.s.encode())),attr="decode"),args=[],keywords=[])
-        ast.copy_location(nn,node)
-        ast.fix_missing_locations(nn)
+        fac(nn,node)
         return nn
 class Number(ant):
     def visit_Num(sef,node):
@@ -214,101 +248,118 @@ class Number(ant):
 class IF2E(ant):
     def visit_If(self,node):
         nn=ite(node)
-        ast.copy_location(nn,node)
+        fac(nn,node)
         return nn
-def stage1(code):
+class HBF(ant):
+    def __init__(self,twl):
+        self.t=twl
+        self.l={f:pbz(f"{twl}('{f}')").value for f in (i.__name__ for i in vb.values() if type(i)==bft)}
+    def visit_Call(self,node):
+        f=node.func
+        if type(f)==ast.Name:
+            if f.id in self.l:
+                node.func=self.l[f.id]
+        return node
+def rfrm(fp,fc=None,m="r"):
+    if op.isdir(fp):
+        sys.exit(f"{fp} is a directory.")
+    try:
+        fh=open(fp,m)
+        if m=="r":
+            return fh.read()
+        if m=="w":
+            return fh.write(fc)
+    except BaseException as b:
+        sys.exit(f"Error ocurred while accessing file {fp}: {b}: {', '.join(str(i) for i in b.args)}")
+    finally:
+        fh.close()
+def stage1(code,flags=0,print=qtp):
     code=ast.parse(code)
     print("Stage 1")
-    code=TSOL().visit(IF2E().visit(Namer().visit(code)))
+    code=IF2E().visit(Namer().visit(code))
+    if flags&1:
+        print("Funtion Obfuscation")
+        fn,cn=rid(),rid()
+        code=FTO(fn,cn).visit(code)
+    if flags&2:
+        print("Hide Builtins")
+        twl=rid()
+        code=HBF(twl).visit(code)
+    print("TSOL")
+    code=TSOL().visit(Stringo().visit(code))
+    cb=code.body
     print("Noise")
-    tna(code.body)
-    ftf(code.body)
-    code.body.insert(0,ast.parse("dc=lambda z,td={int(i*3.8)+65:j for i,j in enumerate('0123456789abcdef')}:bytes.fromhex(b\"\".join(ord(c).to_bytes(2,\"big\") for c in z).decode().translate(td))").body[0])
+    tna(cb)
+    ftf(cb)
+    cb.insert(0,pbz("dc=lambda z,td={int(i*3.8)+65:j for i,j in enumerate('0123456789abcdef')}:bytes.fromhex(b\"\".join(ord(c).to_bytes(2,\"big\") for c in z).decode().translate(td))"))
+    if flags&1:
+        cb.insert(0,pbz(f"{cn}={dcn}"))
+        cb.insert(0,pbz(f"{fn}={dfn}"))
+    if flags&2:
+        bsz="\\x00"
+        cb.insert(0,pbz(f"{twl}=lambda nm:type({twl})(type({twl}.__code__)(0,0,0,2,5,15,b'\\x97\\x00t\\x01{bsz*10}|\\x00i\\x00|\\x01\\xa4\\x01\\x8e\\x01S\\x00',(None,),(nm,),('a','k'),'<NULL>',nm,nm,1,b'\\x80\\x00\\x88\\x01\\x80\\x00',b'',(),()),globals())"))
     return ast.unparse(code)
-def stage2(code):
-    code=ast.parse(code)
-    code=Number().visit(code)
-    csn,sli,fni,anv,bn,rbi,rdi,exh,gb,kn,hn=[rid() for i in range(11)]
-    coc=ast.ClassDef(name=csn,keywords=[],bases=[],decorator_list=[],body=[ast.FunctionDef(name="__init__",args=ast.arguments(posonlyargs=[],defaults=[],kwonlyargs=[],args=[ast.arg(arg=sli),ast.arg(arg=fni)]),body=[ast.Assign(targets=[ast.Attribute(value=ast.Name(id=sli),attr=fni)],value=ast.Name(id=fni),lineno=1)],decorator_list=[],lineno=1),ast.FunctionDef(name='__truediv__', args=ast.arguments(posonlyargs=[], args=[ast.arg(arg=sli), ast.arg(arg=anv)], kwonlyargs=[], defaults=[]), body=[ast.Return(value=ast.Call(func=ast.Attribute(value=ast.Name(id=sli), attr=fni), args=[ast.Starred(value=ast.Name(id=anv))], keywords=[]))], decorator_list=[],lineno=1)])
-    key=h1(rd(0,256).to_bytes())[0:8]
-    mrt=[0,key]
-    rc=rd(0,256)
-    xv=rd(0,256)
-    l=[f"from binascii import a2b_base64 as {rbi}",f"from zlib import decompress as {rdi}",f"{exh}=exec",f"{gb}=globals()",f"from _sha1 import sha1 as {hn}",f"{hn}=lambda b,c={hn}:c(b).digest()",f"t=[0,{key}]",f"xv={xv}",f"{kn}=lambda c,z:1/0 if {hn}(repr([t.copy(),t.__setitem__(0,len(t.append(z[0:4])or t)+len(repr(t)))][0]+[c]).encode())!=z else {exh}({rdi}({rbi}(bytes(xv^i for i in c))).decode(),{gb})"]
-    lcb=len(code.body)
-    itr=1
-    for e in code.body:
-        print(f"Converting node {itr}/{lcb}")
-        itr+=1
-        nxv=rd(0,255)
-        ecn=rid()
-        ta=[rid(),nxv]
-        ci=rid()
-        v=ast.unparse(e)
-        v+=f";xv={nxv};t.append({ta})#\033c\033H"
-        v=zlib.compress(v.encode())
-        v=binascii.b2a_base64(v,newline=0)
-        v=bytes(xv^i for i in v)
-        xv=nxv
-        qv=h1(repr(mrt+[v]).encode())
-        mrt.append(qv[0:4])
-        mrt[0]=len(mrt)+len(repr(mrt))
-        mrt.append(ta)
-        l.append(f"try:\n\traise SyntaxError('Invalid syntax.')\nexcept:\n\t{csn}({kn})/[{csn}.return_{ci}(),{qv}]")
-        coc.body.append(mrs(ci,v))
-    l=[ast.Assign(targets=[ast.Name(id=bn)],value=ast.Name(id="bytes"),lineno=0),coc]+[ast.parse(e) for e in l]
-    code.body=l
-    print("Stringo - 1/3")
-    code=Stringo().visit(code)
-    print("Number - 2/3")
-    code=Number().visit(code)
-    print("BLD - 3/3")
-    code=BLD(bn).visit(code)
-    print("Unparse")
-    code=ast.unparse(code)
-    code="""#===============================#
-# Code Obfuscated by Zulfur Obfuscator V1.4
-# https://github.com/kzcz/zulfur
-# Good luck deobfuscating it
-#===============================#
-"""+code+"\n\n# Cursed, right? Get Zulfur at https://github.com/kzcz/zulfur"
-    return code
-def comp(code):
+def comp(code,flags=0,print=qtp):
     print("Packing - 1/2")
-    c=compile(code,"ZulfurObfuscator","exec")
-    c=marshal.dumps(c)
+    c=ast.unparse([d:=ast.parse(ast.dump(ast.parse(code))),[i.func.__setattr__('id','ast.'+i.func.id) for i in ast.walk(d) if isinstance(i,ast.Call)]][0]).encode()
     c=zlib.compress(c)
     c=binascii.b2a_base64(c)
-    c=f"exec((i:=globals().__getitem__('__builtins__').__getattribute__('__dict__').__getitem__('__import__'))('marshal').__getattribute__('__dict__').__getitem__('loads')(i('zlib').__getattribute__('__dict__').__getitem__('decompress')(i('binascii').__getattribute__('__dict__').__getitem__('a2b_base64')({c}))))"
+    c=f"type(lambda:0)(compile((ast:=__import__('ast')).fix_missing_locations(eval(__import__('zlib').decompress(__import__('binascii').a2b_base64({c})))),'','exec'),globals())()"
     c=ast.parse(c)
     c=BLD("bytes").visit(c)
     c=ast.unparse(c)
     print("Packing - 2/2")
     return f'i=__import__;exec(i("marshal").loads(i("zlib").decompress(i("binascii").a2b_base64({binascii.b2a_base64(zlib.compress(marshal.dumps(compile(code,"ZulfurObfuscator","exec"))),newline=0)}))))' #I Love Marshal
-def process(code):
-    return stage1(code)
+def process(code,f=[0,0,0],ff=0,print=qtp):
+    code=stage1(code,f[0],print)
+    if ff&1:
+        code=comp(code,f[2],print)
+    if ff&128:
+        code=wca(code)
+    return code
 if __name__=="__main__":
+    yv=sys.argv[1:]
+    ls=len(yv)
+    if ls>0:
+        if ls>len(atz):
+            sys.exit("Usage: file [out]")
+        d=dict((k,None) for k in atz)
+        d.update(dict(zip(atz,yv)))
+        f=d["file"]
+        if not f.endswith(".py"):
+            sys.exit(mip)
+        o=d["out"]
+        if not o:
+            o=f.replace(".py","_zfobf.py")
+        fc=rfrm(f)
+        oc=process(fc)
+        rfrm(o,oc,"w")
+        sys.exit(0)
+    print("Zulfur Obfuscator",dver)
     f=input("Enter file to obfuscate: ").strip()
     if not f.endswith(".py"):
-        sys.exit("File must end in .py")
-    try:
-        of=open(f,"r")
-    except:
-        sys.exit("Invalid file.")
-    else:
-        fc=of.read()
-        of.close()
+        sys.exit(mip)
+    fc=rfrm(f)
+    fl=[0,0,0]
+    ff=128
+    pt=qtp
+    if gpi("Quiet mode? <Def=Yes> ") in pfv:
+        pt=print
+    if gpi("Version dependant code? <Def=No> ") in ptv:
+        fl[0]|=1
+        if gpi("Hide builtin names? <Def=No>") in ptv:
+            fl[0]|=2
+        if gpi("Compress code? <Def=No> ") in ptv:
+            ff|=1
+    if gpi("Disable code wrapping? <Def=No> ") in ptv:
+        ff^=128
     try:
         print(f"Obfuscating file {f}")
         ts=time()
-        fc=process(fc)
+        fc=process(fc,fl,ff,pt)
     except BaseException as e:
         raise e
-    else:
-        print(f"Obfuscation took {time()-ts:.2f}s.")
-    if input(f"Pack (Marshal) file? This will need the file be ran on Python version {'.'.join(str(i) for i in sys.version_info[0:3])} : ").strip().lower() in {"y","yes"}:
-        print("Packing file...")
-        fc=comp(fc)
+    print(f"Obfuscation took {time()-ts}")
     nf=f.replace(".py","_zfobf.py")
     open(nf,"w").write(fc)
     print(f"Obfuscated file: {nf}")

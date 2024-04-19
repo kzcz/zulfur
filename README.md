@@ -1,35 +1,32 @@
-# Zulfur - V1.4
-Zulfur is a powerful obfuscator that makes code heavier and less readable
-# How it works
-## Stage 1
-Renames variable names, converts if else to try except else, string get translated to Chinese, and for loops gets translated to while, additionally noise also gets added all around the code
-## Stage 2
-It first obfuscates all the numbers in the code, turning them into 5+3+2+8+.., then creates a class with an overriden truediv magic method, along with an init that accepts a function, that allows you to.. classname(print)/["Hello,","world"]. It loads into the class lots of return_id methods that construct the strings of the code, after base64 and LZMA and xor with a random constant, it obfuscates every node in the body of the code in a way that you require to run the code and you can't just replace exec with print (V1.0 had this error), it creates a lambda function that checks if the hash of the repr of the given encoded code after being added to the t variable matches z, just a simple checksum, then executes it.
-## Stage 3 -- Compaction
-Although the name claims to reduce code size, it does the opposite most of the time , it applies the most common way of obfuscation in python, which is marshal of compile, 4 times after different obfuscations, which make the code absurdly hard to recover, if not impossible
-# Bugs
-The class `Stringo` has a bug where it sometimes decides to crash after ast.unparse. It's not common and the cause is unknown. <br/>
-ZLib data can break when node contents of module.body are too large, causing a crash <br/>
-# Other info
-In all the following versions and this current one, only the stage1 will be ran, and stage2 can be turned on by editing the process function, because it's not guaranteed to be stable
-# Name references
+# Zulfur - V1.5
+Zulfur is a powerful obfuscator that makes code heavier and less readable.
+# Obfuscators
 ## BLD
-Weak string obfuscator.
+Turns strings into `bytes(.....)`, optionally decoding it for str
+## FTO
+It turns functions into an equivalent object, by creating a new code object and creating a function from that code object.
+## ftf
+Turns for loops into while loops.
+## HBF
+Hides built-in function names, like print or exec, not much but leaves room for string obfuscators to do more work.
+## IF2E
+Converts If nodes into Try nodes, trying to run `1/(not condition)`, if it fails, the condition is true, if it doesn't, it was false.
 ## Namer
-Name obfuscator
-## Stringo
-Strong string obfuscator
+It changes names for variables.
 ## Number
-Number obfuscator, Would consider it weak
-## befso
-BackEndForStringObfuscator
-## stbj
-StringToByteJoiner
-## noise
-Noise adder function
-## ftw
-For to while
-## l2add
-List to add
+Turns numbers into sum of smaller numbers.
+## Stringo
+It splits strings to smaller parts, putting every part in a random position of a list, like `[...,part,...]`, then taking index of where the part is, and adding the parts back together.
+## tna
+Adds noise to the code.
 ## TSOL
-Chinese translator
+It encodes the String into a kind of hexadecimal, then mixes the values around, most of the values fall into CJK codes, so it gets the nickname of Chinese translator
+# Info
+## Why use zulfur?
+1. Most python obfuscators are just a for i in range(...): comprees and compile code again and again, yes I'm talking to you Py-fuscate,Those that aren't, like PyArmor, are easy to hook up to a .so or a dll to get the code back, and if you happen to know any obfuscator that does real work, it probably relies on people just not knowing basic reverse engineering.
+2. Zulfurs code is easy to modify, as all it's functionality is block based, you have classes and functions for every obfuscation step, so, if you need to use something specific, you can just import the feature from Zulfur with `from zfobf import Foo,...`.
+3. It's free and there's actual work put into it, instead of a project that was updated last time 75 years B.C.
+## Compatible operating systems
+Linux is guaranteed to work. Windows and Mac were never tested, but there isn't any feature that is on linux not present on Mac or Windows.
+## Contact
+You can DM me in Discord `@puc3` if you have any issues or would like to suggest a new feature.
