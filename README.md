@@ -17,11 +17,6 @@ Zulfur is a powerful Python code obfuscator that makes code harder to read and r
 
 Zulfur uses several subclasses of `ast.NodeTransformer` to manipulate the Abstract Syntax Tree (AST) of the Python code:
 
-#### FTO (Function To Object)
-- Converts function definitions and lambdas into equivalent function objects
-- Uses `eval` to create new code objects and functions from them
-- Handles both synchronous and asynchronous functions
-
 #### BLD (Bytes List Decode)
 - Converts string and bytes literals into obfuscated forms
 - Transforms strings into UTF-8 encoded byte lists that are later decoded
@@ -41,10 +36,6 @@ Zulfur uses several subclasses of `ast.NodeTransformer` to manipulate the Abstra
 - Encodes string and bytes literals using a custom hexadecimal-like encoding
 - Translates the encoded strings to fall mostly within CJK (Chinese, Japanese, Korean) Unicode ranges
 - Wraps the encoded strings in a custom decoding function call
-
-#### Number
-- Breaks down larger integer literals into sums of smaller numbers
-- Makes it harder to immediately recognize numeric values in the code
 
 #### IF2E (If to Except)
 - Converts `if` statements into equivalent `try`/`except` blocks
@@ -82,7 +73,6 @@ python zfobf.py
 ## Configuration Options
 
 - Quiet mode
-- Version dependent code
 - Builtin name hiding 
 - Code compression
 - Code wrapping
