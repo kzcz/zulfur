@@ -4,7 +4,6 @@ import marshal
 import binascii
 import zlib
 import sys
-from _sha1 import sha1 as h1
 from time import perf_counter as time
 from random import choices as ch,choice as coo,randint as rd
 from itertools import zip_longest as zli
@@ -12,25 +11,16 @@ import builtins as vb
 op=os.path
 vb=vars(vb)
 vb.update({"__builtins__":0})
-gta=lambda a,b:a.__getattribute__(b)
 gpi=lambda txt:input(txt).lower().strip()
-qtp=lambda *a,**k:0
+qtp=lambda *a:0
 pbz=lambda c:ast.parse(c).body[0]
-h1=lambda b,q=h1:q(b).digest()
 fac=lambda n,o:[ast.copy_location(n,o),ast.fix_missing_locations(n)]
-ft=type(h1)
-ct=type(h1.__code__)
 ptv=["yes","ye","1"]
 pfv=["no","n","0"]
 bft=type(id)
 mip="Filename must end in .py"
-pl=["argcount","posonlyargcount","kwonlyargcount","nlocals","stacksize","flags","code","consts","names","varnames","filename","name","qualname","firstlineno","linetable","exceptiontable","freevars","cellvars"]
 atz=["file","out"]
 link="https://github.com/kzcz/zulfur"
-l0="(lambda:0)"
-cp=r"(0,0,0,2,5,15,b'\x97\x00t\x01'+b'\x00'*10+b'|\x00i\x00|\x01\xa4\x01\x8e\x01S\x00',(None,),(nm,),(*'ak',),'<NULL>',nm,nm,1,b'\x80\x00\x88\x01\x80\x00',b'',(),()),globals())"
-dfn=f"type{l0}"
-dcn=f"type({l0}.__code__)"
 valpha,vbeta,vrels=(2,1,0)
 ver=(1,6,vrels)
 stver='.'.join(str(v) for v in ver[:2])
@@ -42,24 +32,6 @@ sod=lambda s,l:set(range(s,s+l))
 st=list(sod(65,58)-sod(91,6))+[ord("_")]
 st2=st+list(range(48,58))
 sai=st2+list((sod(192,256)|sod(452,236)|sod(912,240)|sod(1654,94)|sod(1872,86)|sod(3904,44)|sod(5024,85)|sod(5121,639)|sod(6016,52)|sod(6917,47)|sod(7680,272)|sod(8544,41)|sod(11264,238))-sod(11493,6)-{215,247,930,1014,5741,5742,3912})
-class litr:
-    def __init__(self,a):
-        self.a=a
-    def __repr__(self):
-        return self.a
-def cotc(co,cn=dcn):
-    dv={k:gta(co,"co_"+k) for k in pl}
-    cst=list(dv["consts"])
-    for i,v in enumerate(cst):
-        if type(v)==ct:
-            cst[i]=litr(cotc(v,cn))
-    dv["consts"]=tuple(cst)
-    return f"{cn}{tuple(dv.values())}"
-def fdtc(fd,fn=dfn,cn=dcn):
-    return f"{fn}({cotc(fd.__code__,cn)},globals(),{fd.__name__!r})"
-def wkrd(an):
-    an.defaults=[ast.Call(func=ast.Name(id="eval"),keywords=[],args=[ast.Str(ast.unparse(d))]) for d in an.defaults]
-    an.kw_defaults=[ast.Call(func=ast.Name(id="eval"),keywords=[],args=[ast.Str(ast.unparse(d))]) for d in an.kw_defaults]
 def rid():
     return chr(coo(st))+"".join(chr(i) for i in ch(sai,k=rd(2,6)))
 def ras(cst=ast.Str):
@@ -141,32 +113,6 @@ def ite(ifn):
     else:
         exh.body=IF2E().visit(ast.Module(body=ifn.orelse)).body
     return ast.Try(body=[ast.Expr(value=ast.BinOp(left=ast.Num(n=1),op=ast.Div(),right=ifn.test))],handlers=[exh],orelse=ifn.body,finalbody=[])
-class FTO(ant):
-    def __init__(self,fn,cn):
-        self.fn=fn
-        self.cn=cn
-        self.tg=globals()
-    def visit_Lambda(self,node):
-        wkrd(node.args)
-        try:
-            f=pbz(fdtc(eval(ast.unparse(node),self.tg),self.fn,self.cn)).value
-        except NameError:
-            return node
-        fac(f,node)
-        return f
-    def visit_AsyncFunctionDef(self,node):
-        return self.visit_FunctionDef(node)
-    def visit_FunctionDef(self,node):
-        wkrd(node.args)
-        d={}
-        n=node.name
-        try:
-            exec(ast.unparse(node),self.tg,d)
-        except NameError:
-            return node
-        f=pbz(f"{n}={fdtc(*d.values(),self.fn,self.cn)}")
-        fac(f,node)
-        return f
 class BLD(ant):
     def __init__(self,bn):
         self.bn=bn
@@ -269,20 +215,6 @@ class TSOL(ant):
         nn=ast.Call(func=ast.Attribute(value=self.visit_Bytes(ast.Bytes(s=node.s.encode())),attr="decode"),args=[],keywords=[])
         fac(nn,node)
         return nn
-class Number(ant):
-    def visit_Num(sef,node):
-        if 9>node.n:
-            return node
-        if node.n>2000:
-            return node
-        nl=[]
-        while node.n>10:
-            i=rd(2,10)
-            nl.append(i)
-            node.n-=i
-        nl.append(node.n)
-        nl=[ast.Num(n=z) for z in nl]
-        return l2add(nl)
 class IF2E(ant):
     def visit_If(self,node):
         nn=ite(node)
@@ -290,7 +222,6 @@ class IF2E(ant):
         return nn
 class HBF(ant):
     def __init__(self,twl):
-        self.t=twl
         self.l={f:pbz(f"{twl}('{f}')").value for f in (i for i,j in vb.items() if type(j)==bft)}
     def visit_Call(self,node):
         f=node.func
@@ -326,10 +257,6 @@ def stage1(code,flags=0,print=qtp):
     print("Stage 1")
     code=Namer().visit(AG2O().visit(IF2E().visit(code)))
     if flags&1:
-        print("Funtion Obfuscation")
-        fn,cn=rid(),rid()
-        code=FTO(fn,cn).visit(code)
-    if flags&2:
         print("Hide Builtins")
         twl=rid()
         code=HBF(twl).visit(code)
@@ -343,14 +270,7 @@ def stage1(code,flags=0,print=qtp):
     ftf(cb)
     iz=lambda l:cb.insert(0,pbz(l))
     iz("dc=lambda z,td={int(i*3.8)+65:j for i,j in enumerate('0123456789abcdef')}:bytes.fromhex(b\"\".join(ord(c).to_bytes(2,\"big\") for c in z).decode().translate(td))")
-    if flags&3==3:
-        iz(f"{cn}=type({twl}.__code__)")
-        iz(f"{fn}=type({twl})")
-        iz(f"{twl}=lambda nm:{fn}({cn}"+cp)
-    elif flags&1:
-        iz(f"{cn}={dcn}")
-        iz(f"{fn}={dfn}")
-    elif flags&2:
+    if flags&1:
         iz(f"{twl}=lambda nm:type({twl})(type({twl}.__code__)"+cp)
     fac(code,i)
     return ast.unparse(code)
@@ -398,12 +318,10 @@ if __name__=="__main__":
     pt=qtp
     if gpi("Quiet mode? <Def=Yes> ") in pfv:
         pt=print
-    if gpi("Version dependant code? <Def=No> ") in ptv:
+    if gpi("Hide builtin names? <Def=No>") in ptv:
         fl[0]|=1
-        if gpi("Hide builtin names? <Def=No>") in ptv:
-            fl[0]|=2
-        if gpi("Compress code? <Def=No> ") in ptv:
-            ff|=1
+    if gpi("Compress code? <Def=No> ") in ptv:
+        ff|=1
     if gpi("Disable code wrapping? <Def=No> ") in ptv:
         ff^=128
     print(f"Obfuscating file {f}")
