@@ -288,7 +288,7 @@ def stage1(code,flags=0,print=qtp):
     iz=lambda l:cb.insert(0,pbz(l))
     iz("dc=lambda z,td={int(i*3.8)+65:j for i,j in enumerate('0123456789abcdef')}:bytes.fromhex(b\"\".join(ord(c).to_bytes(2,\"big\") for c in z).decode().translate(td))")
     if flags&1:
-        iz(f"{twl}=lambda nm:return getattr(__import__('builtins'),'nm')")
+        iz(f"{twl}=lambda nm: getattr(__import__('builtins'),'nm')")
     fac(code,i)
     return ast.unparse(code)
 def comp(code,flags=0,print=qtp):
