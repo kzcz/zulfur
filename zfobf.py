@@ -268,8 +268,6 @@ class AG2O(ant):
 		return nn
 def stage1(code,flags=0,print=qtp):
     code=ast.parse(code)
-    code=Namer().visit(code)
-    return ast.unparse(code)
     i=ast.Pass()
     fac(i,code)
     print("Stage 1")
