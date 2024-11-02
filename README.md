@@ -1,4 +1,4 @@
-# Zulfur Obfuscator V1.6
+# Zulfur Obfuscator V1.7
 
 Zulfur is a powerful Python code obfuscator that makes code harder to read and reverse engineer.
 
@@ -139,3 +139,6 @@ If you're diving into the code or looking to understand or extend the functional
 - **Transparency**: You have access to the source code, allowing you to study and understand how it works.
 - **Contribution**: You can contribute back improvements or fixes to the project, which will also be licensed under GPLv3.
 - **Redistribution**: If you share the modified version of the software, you must also share the source code and keep it under the GPLv3 license.
+
+### Changelog
+- **1.7 alpha 1**: Added partial support for the syntax of 3.13 and later.
