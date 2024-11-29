@@ -1,4 +1,4 @@
-# Zulfur Obfuscator V1.7
+# Zulfur Obfuscator Suite V2.0
 
 Zulfur is a powerful Python code obfuscator that makes code harder to read and reverse engineer.
 
@@ -54,12 +54,20 @@ Zulfur uses several subclasses of `ast.NodeTransformer` to manipulate the Abstra
 - **Dead Code Injection**: Adds random noise statements throughout code
 - **Code Compression**: Compresses and encodes obfuscated code
 
+## Zulfur Merger
+
+zfmrg.py is a tool that merges many files into a single one, compressing the files, it does not obfuscate by itself, but can be used for a thin layer of indirection, and help distribute your programs as a unit. Note that it checks for the right packages to be installed, but it wont install them by itself.
+
 ## Usage
 
 ### Command Line
 
 ```
 python zfobf.py <input_file> [output_file]
+```
+If using Android, MacOs, or Unix-like OS, you can:
+```
+./zfobf.py <input_file> [output_file]
 ```
 
 ### Interactive Mode
@@ -68,6 +76,12 @@ Run without arguments for interactive prompts:
 
 ```
 python zfobf.py
+python zfmrg.py
+```
+And similarly with the last method, under the same conditions, you can:
+```
+./zfobf.py
+./zfmrg.py
 ```
 
 ## Configuration Options
@@ -83,7 +97,6 @@ python zfobf.py
 - Modular design for easy extension
 - Free and open source
 - Active development
-
 ## Contributing
 
 I welcome contributions to Zulfur. For effective collaboration, please follow these guidelines:
@@ -141,4 +154,5 @@ If you're diving into the code or looking to understand or extend the functional
 - **Redistribution**: If you share the modified version of the software, you must also share the source code and keep it under the GPLv3 license.
 
 ### Changelog
-- **1.7 alpha 1**: Added partial support for the syntax of 3.13 and later.
+- **1.7**: Added partial support for the syntax of 3.13 and later.
+- **2.0 alpha**: Changed location of some stuff, and merged a background project.

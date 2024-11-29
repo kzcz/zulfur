@@ -6,24 +6,22 @@ import binascii
 import zlib
 import sys
 from time import perf_counter as time
-from random import choices as ch,choice as coo,randint as rd
+from random import choices as ch, choice as coo, randint as rd
 from itertools import zip_longest as zli
 import builtins as vb
+from base import ask
 op=os.path
 vb=vars(vb)
 vb.update({"__builtins__":0})
-gpi=lambda txt:input(txt).lower().strip()
 qtp=lambda *a:0
 pbz=lambda c:ast.parse(c).body[0]
 fac=lambda n,o:[ast.copy_location(n,o),ast.fix_missing_locations(n)] and n
-ptv=["yes","ye","1"]
-pfv=["no","n","0"]
 bft=type(id)
 mip="Filename must end in .py"
 atz=["file","out"]
 link="https://github.com/kzcz/zulfur"
 valpha,vbeta,vrels=(2,1,0)
-ver=(1,7,valpha)
+ver=(2,0,valpha)
 stver='.'.join(str(v) for v in ver[:2])
 dver=f"V{stver} ({['Release','Beta','Alpha'][ver[2]]})"
 wca=lambda c:f"#===============================#\n# Code Obfuscated by Zulfur Obfuscator V{stver}\n# {link}\n# Good luck deobfuscating it\n#===============================#\n\n{c}\n\n# Cursed, right? Get Zulfur at {link}"
@@ -50,9 +48,9 @@ def rvg():
     if zz==1:
         return ras()
     return aac(value=rd(0,1048576))
-def noise(body,pon=0.32):
+def noise(body,prob=0.32):
     l=len(body)
-    a=l*(1-pon)
+    a=l*(1-prob)
     i=l
     while (i>0):
         qz=rd(0,2)
@@ -314,7 +312,7 @@ if __name__=="__main__":
     ls=len(yv)
     if ls>0:
         if ls>len(atz):
-            sys.exit("Usage: file [out]")
+            sys.exit("Usage: file [out_file]")
         d=dict(zli(atz,yv))
         f,o=d.values()
         if not f.endswith(".py"):
@@ -333,13 +331,13 @@ if __name__=="__main__":
     fl=[0,0]
     ff=128
     pt=qtp
-    if gpi("Quiet mode? <Def=Yes> ") in pfv:
+    if ask("Quiet mode", True):
         pt=print
-    if gpi("Hide builtin names? <Def=No>") in ptv:
+    if ask("Hide builtin names", False):
         fl[0]|=1
-    if gpi("Compress code? <Def=No> ") in ptv:
+    if ask("Compress code", False):
         ff|=1
-    if gpi("Disable code wrapping? <Def=No> ") in ptv:
+    if ask("Disable code wrapping", False):
         ff^=128
     print(f"Obfuscating file {f}")
     ts=time()
