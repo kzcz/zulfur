@@ -9,7 +9,7 @@ from time import perf_counter as time
 from random import choices as ch, choice as coo, randint as rd
 from itertools import zip_longest as zli
 import builtins as vb
-from base import ask
+from base import ask, wca, dver
 op=os.path
 vb=vars(vb)
 vb.update({"__builtins__":0})
@@ -19,12 +19,6 @@ fac=lambda n,o:[ast.copy_location(n,o),ast.fix_missing_locations(n)] and n
 bft=type(id)
 mip="Filename must end in .py"
 atz=["file","out"]
-link="https://github.com/kzcz/zulfur"
-valpha,vbeta,vrels=(2,1,0)
-ver=(2,0,valpha)
-stver='.'.join(str(v) for v in ver[:2])
-dver=f"V{stver} ({['Release','Beta','Alpha'][ver[2]]})"
-wca=lambda c:f"#===============================#\n# Code Obfuscated by Zulfur Obfuscator V{stver}\n# {link}\n# Good luck deobfuscating it\n#===============================#\n\n{c}\n\n# Cursed, right? Get Zulfur at {link}"
 ant=ast.NodeTransformer
 aac=ast.Constant
 anw=[i for i,j in vb.items() if isinstance(j,type)]
@@ -330,9 +324,9 @@ if __name__=="__main__":
     fc=rfrm(f)
     fl=[0,0]
     ff=128
-    pt=qtp
+    pt=print
     if ask("Quiet mode", True):
-        pt=print
+        pt=qtp
     if ask("Hide builtin names", False):
         fl[0]|=1
     if ask("Compress code", False):

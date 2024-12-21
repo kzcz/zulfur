@@ -1,4 +1,4 @@
-# Zulfur Obfuscator Suite V2.0
+# Zulfur Obfuscator Suite V2.1
 
 Zulfur is a powerful Python code obfuscator that makes code harder to read and reverse engineer.
 
@@ -58,6 +58,10 @@ Zulfur uses several subclasses of `ast.NodeTransformer` to manipulate the Abstra
 
 zfmrg.py is a tool that merges many files into a single one, compressing the files, it does not obfuscate by itself, but can be used for a thin layer of indirection, and help distribute your programs as a unit. Note that it checks for the right packages to be installed, but it wont install them by itself.
 
+# Underworld
+
+underworld.py is a tool that splits your code into individual statements, encrypts them with a simple algorithm, and puts them back together. Each statement has an individual checksum to detect tampering. It does not obfuscate by itself, but can be used alongside the main obfuscator for extra protection. Note that it will stop execution if any checksum fails, which might happen on multiprocessing environments.
+
 ## Usage
 
 ### Command Line
@@ -111,6 +115,7 @@ I welcome contributions to Zulfur. For effective collaboration, please follow th
 
 - **Issue Description**: What is Zulfur incorrectly patching? Describe clearly in English or Spanish.
 - **Pre-Zulfur Functionality**: Did it work before Zulfur?
+- **Maybe it is your fault**: Sometimes, bugs or bad practices in your code might generate obfuscated code that misses a variable, or that doesn't work as intended, since I am not a magician, the best I can do is recommend you to, before submitting an issue, run a linter on your own code to check its consistency, I use pyright.
 
 **For Zulfur Crashes:**
 
@@ -156,3 +161,4 @@ If you're diving into the code or looking to understand or extend the functional
 ### Changelog
 - **1.7**: Added partial support for the syntax of 3.13 and later.
 - **2.0 alpha**: Changed location of some stuff, and merged a background project.
+- **2.1 alpha**: Moved more stuff, and added a new obfuscator as its own individual file, since it is still missing features.
