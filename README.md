@@ -58,7 +58,7 @@ Zulfur uses several subclasses of `ast.NodeTransformer` to manipulate the Abstra
 
 zfmrg.py is a tool that merges many files into a single one, compressing the files, it does not obfuscate by itself, but can be used for a thin layer of indirection, and help distribute your programs as a unit. Note that it checks for the right packages to be installed, but it wont install them by itself.
 
-# Underworld
+## Underworld
 
 underworld.py is a tool that splits your code into individual statements, encrypts them with a simple algorithm, and puts them back together. Each statement has an individual checksum to detect tampering. It does not obfuscate by itself, but can be used alongside the main obfuscator for extra protection. Note that it will stop execution if any checksum fails, which might happen on multiprocessing environments.
 
