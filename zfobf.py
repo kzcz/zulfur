@@ -1,4 +1,8 @@
 #!/bin/env python
+# Copyright 2024 KillZwitch Team
+# https://github.com/kzcz
+# Author: kzzc@proton.me
+# This file is licensed under the GPL version 3 and later
 import os
 import ast
 import marshal

@@ -1,3 +1,8 @@
+# Copyright 2024 KillZwitch Team
+# https://github.com/kzcz
+# Author: kzzc@proton.me
+# This file is licensed under the GPL version 3 and later
+
 from zfobf import rid,pbz,noise,rd
 from base import ask,dver,wca
 from base64 import b85encode

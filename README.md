@@ -68,10 +68,12 @@ underworld.py is a tool that splits your code into individual statements, encryp
 
 ```
 python zfobf.py <input_file> [output_file]
+python zfmrg.py <gzip|zlib|lzma> <out.py> <in1.py> <in2.py> [more_files.py ...]
 ```
 If using Android, MacOs, or Unix-like OS, you can:
 ```
 ./zfobf.py <input_file> [output_file]
+./zfmrg.py <gzip|zlib|lzma> <out.py> <in1.py> <in2.py> [more_files.py ...]
 ```
 
 ### Interactive Mode
@@ -114,23 +116,21 @@ I welcome contributions to Zulfur. For effective collaboration, please follow th
 **For Bugs/User Crashes:**
 
 - **Issue Description**: What is Zulfur incorrectly patching? Describe clearly in English or Spanish.
-- **Pre-Zulfur Functionality**: Did it work before Zulfur?
+- **Pre-obfuscate Functionality**: Did it work before obfuscation?
 - **Maybe it is your fault**: Sometimes, bugs or bad practices in your code might generate obfuscated code that misses a variable, or that doesn't work as intended, since I am not a magician, the best I can do is recommend you to, before submitting an issue, run a linter on your own code to check its consistency, I use pyright.
 
 **For Zulfur Crashes:**
 
 - **Crash Location**: Which line or section crashed?
 - **Usage Context**: Was Zulfur imported or run directly?
-- **Modifications**: If modified, what are the sources of these changes?
+- **Modifications**: If modified, what are the changes?
 
-### Pull Requests
+**For Merger Crashes:**
 
-1. **Fork and Clone**: Fork Zulfur and clone it.
-2. **Branch**: Create a new branch for your changes.
-3. **Commit**: Use clear commit messages.
-4. **Test**: Verify your changes.
-5. **Pull Request**: Push and submit a pull request with a description.
-6. **Review**: Address feedback from reviewers.
+- **Crash Location**: Which line or section crashed?
+- **Modifications**: If modified, what are the changes?
+
+Note that zfmrg.py **CAN** check for dependencies, but **IT WONT** install them. Also note that even when you bundle files together, they won't have access to each other.
 
 ### Contact
 
@@ -138,7 +138,7 @@ For issues or help, contact @puc3 on Discord.
 
 ## Compatibility 
 
-Tested on Linux. Should work on Windows and macOS.
+Tested and developed on Linux. Should work on Windows and macOS.
 
 ## License
 
@@ -162,3 +162,4 @@ If you're diving into the code or looking to understand or extend the functional
 - **1.7**: Added partial support for the syntax of 3.13 and later.
 - **2.0 alpha**: Changed location of some stuff, and merged a background project.
 - **2.1 alpha**: Moved more stuff, and added a new obfuscator as its own individual file, since it is still missing features.
+- **2.1 2nd alpha**: Added copyright headers on files that didn't have it, and improved the code quality for zfmrg, functional but incomplete argument support.
