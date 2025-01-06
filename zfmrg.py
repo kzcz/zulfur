@@ -1,5 +1,5 @@
 #!/bin/env python
-# Copyright 2024 KillZwitch Team
+# Copyright 2024-2025 KillZwitch Team
 # https://github.com/kzcz
 # Author: kzzc@proton.me
 # This file is licensed under the GPL version 3 and later
@@ -38,18 +38,11 @@ def chk_comp(file: str, comp: str) -> bytes:
             print("That file, ({f}) has invalid python code.")
             return b''
         return algs[comp](n)
-    except FileNotFoundError:
-        print("The file doesn't exist.")
-        return b''
-    except PermissionError:
-        print("You don't have permission to open that file.")
-        return b''
-    except IsADirectoryError:
-        print("That path was a directory.")
-        return b''
-    except Exception as e:
-        print(f"Unexpected error: {e!r}")
-        return b''
+    except FileNotFoundError: print("The file doesn't exist.")
+    except PermissionError: print("You don't have permission to open that file.")
+    except IsADirectoryError: print("That path was a directory.")
+    except Exception as e: print(f"Unexpected error: {e!r}")
+    return b''
 
 def pack(files: dict[str,bytes], calg: str, reqpkg: list[str], note: str):
     fmt_fcnt=lambda lns: f"""# Warning: this file contains binary data that might get corrupted
@@ -129,7 +122,6 @@ else:
     try:
         with open(outf,"w") as of:
             of.write(pack(files,comp,pkgl,nt))
-            of.close()
     except Exception as e:
         die(f"Got exception {e!r} while writing to {outf}")
     

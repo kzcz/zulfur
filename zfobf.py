@@ -1,5 +1,5 @@
 #!/bin/env python
-# Copyright 2024 KillZwitch Team
+# Copyright 2024-2025 KillZwitch Team
 # https://github.com/kzcz
 # Author: kzzc@proton.me
 # This file is licensed under the GPL version 3 and later
@@ -7,6 +7,7 @@ import os
 import ast
 import marshal
 import binascii
+from typing import Literal
 import zlib
 import sys
 from time import perf_counter as time
@@ -15,7 +16,7 @@ from itertools import zip_longest as zli
 import builtins as vb
 from base import ask, wca, dver
 op=os.path
-vb=vars(vb)
+vb=vb.__dict__
 vb.update({"__builtins__":0})
 qtp=lambda *a:0
 pbz=lambda c:ast.parse(c).body[0]
@@ -23,23 +24,24 @@ fac=lambda n,o:[ast.copy_location(n,o),ast.fix_missing_locations(n)] and n
 bft=type(id)
 mip="Filename must end in .py"
 atz=["file","out"]
+# shorthands
 ant=ast.NodeTransformer
 aac=ast.Constant
 anw=[i for i,j in vb.items() if isinstance(j,type)]
 sod=lambda s,l:set(range(s,s+l))
 st=list(sod(65,58)-sod(91,6))+[ord("_")]
 st2=st+list(range(48,58))
-sai=st2+list((sod(192,256)|sod(452,236)|sod(912,240)|sod(1654,94)|sod(1872,86)|sod(3904,44)|sod(5024,85)|sod(5121,639)|sod(6016,52)|sod(6917,47)|sod(7680,272)|sod(8544,41)|sod(11264,238))-sod(11493,6)-{215,247,930,1014,5741,5742,3912})
 # symbol list
-def rid():
+sai=st2+list((sod(192,256)|sod(452,236)|sod(912,240)|sod(1654,94)|sod(1872,86)|sod(3904,44)|sod(5024,85)|sod(5121,639)|sod(6016,52)|sod(6917,47)|sod(7680,272)|sod(8544,41)|sod(11264,238))-sod(11493,6)-{215,247,930,1014,5741,5742,3912})
+def rid() -> str:
     return chr(coo(st))+"".join(chr(i) for i in ch(sai,k=rd(2,6)))
 ZM_STR = 0
 ZM_BYTE = 1
-def ras(mode: int = ZM_STR):
+def ras(mode: int = ZM_STR) -> aac:
     bt=bytes(ch(st2,k=rd(2,6)))
     if mode == ZM_STR: bt=bt.decode()
     return aac(value=bt)
-def rvg():
+def rvg() -> aac:
     zz=rd(0,2)
     if zz==0:
         return ras(ZM_BYTE)
@@ -125,7 +127,7 @@ def befso(e,mode=ZM_STR):
         ctx=ast.Load(),
         lineno=0
     )
-def stbj(st,bn):
+def stbj(st: bytes,bn: str) -> ast.Call:
     return ast.Call(func=ast.Name(id=bn),args=[ast.List(elts=[aac(value=i) for i in st],ctx=ast.Load())],keywords=[])
 def ite(ifn):
     exh=ast.ExceptHandler(type=ast.Name(id="ZeroDivisionError"))
@@ -133,9 +135,9 @@ def ite(ifn):
         exh.body=[ast.Pass()]
     else:
         exh.body=IF2E().visit(ast.Module(body=ifn.orelse)).body
-    return ast.Try(body=[ast.Expr(value=ast.BinOp(left=aac(value=1),op=ast.Div(),right=ifn.test))],handlers=[exh],orelse=ifn.body,finalbody=[])
+    return ast.Try(body=[ast.Expr(value=ast.BinOp(left=aac(value=1),op=ast.Div(),right=ast.Call(func=ast.Name(id="bool"), args=[ifn.test], keywords=[])))],handlers=[exh],orelse=ifn.body,finalbody=[])
 class BLD(ant):
-    def __init__(self,bn):
+    def __init__(self,bn: str):
         self.bn=bn
     def visit_JoinedStr(self,node):
         return node
@@ -149,7 +151,7 @@ class BLD(ant):
         return fac(n,node)
 class Stringo(ant):
     def __init__(self):
-        self. vn=set()
+        self.vn=set()
     def visit_JoinedStr(self,node):
         return node
     def visit_Constant(self,node):
@@ -180,8 +182,8 @@ class Stringo(ant):
 class Namer(ant):
     def __init__(self):
         self.tfd={}
-    def visit(self,nd):
-        for n in ast.walk(nd):
+    def visit(self,node):
+        for n in ast.walk(node):
             nt=type(n)
             if nt == ast.Name:
                 self.cnn(n,"id")
@@ -203,35 +205,32 @@ class Namer(ant):
                     if al.asname==None:
                         al.asname=al.name
                     self.cnn(al,"asname")
-        return nd
-    def cnn(self,nd,atn):
-        q=getattr(nd,atn)
+        return node
+    def cnn(self,node,atn):
+        q=getattr(node,atn)
         if (q not in self.tfd)and(q not in vb):
             self.tfd[q]=rid()
         if q in self.tfd:
-            setattr(nd,atn,self.tfd[q])
-        return nd
+            setattr(node,atn,self.tfd[q])
+        return node
 class TSOL(ant):
     td={ord(j):chr(int(i*3.8)+65) for i,j in enumerate('0123456789abcdef')}
     def __init__(self):
         self.vn=set()
-    def visit_Bytes(self,node):
-        if id(node) in self.vn:
-            return node
+    def visit_Constant(self, node):
+        tnv=type(node.value)
+        if id(node) in self.vn: return node
+        if tnv not in [str,bytes]: return node
+        if tnv == str: node=aac(value=node.value.encode())
         x=node.value.hex().translate(self.td).encode()
         s=aac(value="".join([chr(int.from_bytes(bytes(w),"big")) for w in zip(x[::2],x[1::2])]))
         self.vn.add(id(s))
         nn=ast.Call(func=ast.Name(id="dc"),keywords=[],args=[s])
+        if tnv == str: nn=ast.Call(func=ast.Attribute(value=nn,attr="decode"),args=[aac(value="utf-8")],keywords=[])
         fac(nn,node)
         return nn
     def visit_JoinedStr(self,node):
         return node
-    def visit_Str(self,node):
-        if id(node) in self.vn:
-            return node
-        nn=ast.Call(func=ast.Attribute(value=self.visit_Bytes(aac(value=node.value.encode())),attr="decode"),args=[aac(value="utf-8")],keywords=[])
-        fac(nn,node)
-        return nn
 class IF2E(ant):
     def visit_If(self,node):
         nn=ite(node)
@@ -246,7 +245,7 @@ class HBF(ant):
             if f.id in self.l:
                 node.func=self.l[f.id]
         return node
-def rfrm(fp,fc=None,m="r"):
+def rfrm(fp: str,fc: str = "", m: Literal["r"] | Literal["w"] ="r"):
     if op.isdir(fp):
         sys.exit(f"{fp} is a directory.")
     try:

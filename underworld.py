@@ -1,4 +1,4 @@
-# Copyright 2024 KillZwitch Team
+# Copyright 2024-2025 KillZwitch Team
 # https://github.com/kzcz
 # Author: kzzc@proton.me
 # This file is licensed under the GPL version 3 and later
