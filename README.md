@@ -164,3 +164,4 @@ If you're diving into the code or looking to understand or extend the functional
 - **2.1 alpha**: Moved more stuff, and added a new obfuscator as its own individual file, since it is still missing features.
 - **2.1 2nd alpha**: Added copyright headers on files that didn't have it, and improved the code quality for zfmrg, functional but incomplete argument support.
 - **2.1 3rd alpha**: Fixed a bug that caused non integer if's (like `if "str"`) to crash. Simplified some logic in zfmrg. Added some typing indicators in zfobf.
+- **2.1 4th alpha**: Fixed a weird bug in Namer. Improved underworld lightly.
