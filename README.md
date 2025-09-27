@@ -1,15 +1,21 @@
-# Zulfur Obfuscator Suite V2.1
+# Zulfur Obfuscator Suite V2.1 — Python AST obfuscator & protector
 
-Zulfur is a powerful Python code obfuscator that makes code harder to read and reverse engineer.
+Zulfur is a powerful, extensible **Python code obfuscator** that operates at the AST (Abstract Syntax Tree) level to make code harder to read and reverse engineer. Ideal for protecting intellectual property, adding a layer of anti-tamper protection, and making static analysis more difficult.
+
+## Quick summary
+
+- **What:** Python AST-level obfuscation toolkit  
+- **Why:** Protect code from casual inspection and reverse engineering  
+- **How:** Multiple AST transformers, dead-code injection, compression and simple runtime integrity checks
 
 ## Features
 
-- String obfuscation
-- Variable and function name randomization 
-- Control flow obfuscation
-- Dead code injection
-- Builtin function hiding
-- Code compression
+- **String obfuscation** — transforms and encodes literals to hide plaintext.  
+- **Variable & function name randomization** — consistent renaming to prevent easy tracing. 
+- **Control flow obfuscation** — alters program flow to hinder static analysis.
+- **Dead code injection** — inserts non-functional noise to confuse reverse engineering.
+- **Builtin function hiding** — wraps builtins to obscure intent.
+- **Code compression** — compresses/encodes the final payload for distribution.
 
 ## Obfuscation Techniques
 
@@ -56,22 +62,23 @@ Zulfur uses several subclasses of `ast.NodeTransformer` to manipulate the Abstra
 
 ## Zulfur Merger
 
-zfmrg.py is a tool that merges many files into a single one, compressing the files, it does not obfuscate by itself, but can be used for a thin layer of indirection, and help distribute your programs as a unit. Note that it checks for the right packages to be installed, but it wont install them by itself.
+zfmrg.py is a tool that merges many files into a single one, compressing the files; it does not obfuscate by itself, but can be used for a thin layer of indirection and to distribute programs as a unit. Note that it checks for required packages but it **won't** install them.
 
 ## Underworld
 
-underworld.py is a tool that splits your code into individual statements, encrypts them with a simple algorithm, and puts them back together. Each statement has an individual checksum to detect tampering. It does not obfuscate by itself, but can be used alongside the main obfuscator for extra protection. Note that it will stop execution if any checksum fails, which might happen on multiprocessing environments.
+underworld.py is a tool that splits your code into individual statements, encrypts them with a simple algorithm, and puts them back together. Each statement has an individual checksum to detect tampering. It does not obfuscate by itself, but can be used alongside the main obfuscator for extra protection. Note that it will stop execution if any checksum fails, which might happen in multiprocessing environments.
 
 ## Usage
 
 ### Command Line
 
-```
+``` 
 python zfobf.py <input_file> [output_file]
 python zfmrg.py <gzip|zlib|lzma> <out.py> <in1.py> <in2.py> [more_files.py ...]
 ```
+
 If using Android, MacOs, or Unix-like OS, you can:
-```
+``` 
 ./zfobf.py <input_file> [output_file]
 ./zfmrg.py <gzip|zlib|lzma> <out.py> <in1.py> <in2.py> [more_files.py ...]
 ```
@@ -80,12 +87,13 @@ If using Android, MacOs, or Unix-like OS, you can:
 
 Run without arguments for interactive prompts:
 
-```
+``` 
 python zfobf.py
 python zfmrg.py
 ```
+
 And similarly with the last method, under the same conditions, you can:
-```
+``` 
 ./zfobf.py
 ./zfmrg.py
 ```
@@ -103,6 +111,7 @@ And similarly with the last method, under the same conditions, you can:
 - Modular design for easy extension
 - Free and open source
 - Active development
+
 ## Contributing
 
 I welcome contributions to Zulfur. For effective collaboration, please follow these guidelines:
