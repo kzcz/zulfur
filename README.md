@@ -104,6 +104,7 @@ And similarly with the last method, under the same conditions, you can:
 - Builtin name hiding 
 - Code compression
 - Code wrapping
+- Disabling Namer (consider if running into errors with properties that don't exist)
 
 ## Advantages
 
@@ -175,3 +176,4 @@ If you're diving into the code or looking to understand or extend the functional
 - **2.1 3rd alpha**: Fixed a bug that caused non integer if's (like `if "str"`) to crash. Simplified some logic in zfmrg. Added some typing indicators in zfobf.
 - **2.1 4th alpha**: Fixed a weird bug in Namer. Improved underworld lightly.
 - **2.1 stable**: Added f-string obfuscation support. Fixed infinite recursion in IF2E with depth limit. Improved Namer to handle match statement variables (MatchAs, MatchStar, MatchMapping).
+- **2.1 stable (hotfix)**: Added an option in interactive mode to disable Namer.

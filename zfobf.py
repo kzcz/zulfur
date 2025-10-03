@@ -237,7 +237,7 @@ class Namer(ant):
                         self.tfd[n.rest]=rid()
                     if n.rest in self.tfd:
                         n.rest=self.tfd[n.rest]
-        return node
+        return super().generic_visit(node)
     def cnn(self,node,atn):
         q=getattr(node,atn)
         if q in self.tfd.values(): return node
@@ -304,7 +304,8 @@ def stage1(code,flags=0,print=qtp):
     i=ast.Pass()
     fac(i,code)
     print("Stage 1")
-    code=Namer().visit(AG2O().visit(IF2E().visit(code)))
+    code=AG2O().visit(IF2E().visit(code))
+    if not flags&2: code=Namer().visit(code)
     twl='' # keep warnings quiet
     if flags&1:
         print("Hide Builtins")
@@ -368,6 +369,8 @@ if __name__=="__main__":
     pt=print
     if ask("Quiet mode", True):
         pt=qtp
+    if ask("Disable Namer", False):
+        fl[0]|=2
     if ask("Hide builtin names", False):
         fl[0]|=1
     if ask("Compress code", False):
