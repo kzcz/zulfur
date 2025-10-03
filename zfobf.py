@@ -37,6 +37,18 @@ def rid() -> str:
     return chr(coo(st))+"".join(chr(i) for i in ch(sai,k=rd(2,6)))
 ZM_STR = 0
 ZM_BYTE = 1
+def jsh(node, self):
+    for i, v in enumerate(node.values):
+        if isinstance(v, ast.Constant) and type(v.value) == str:
+            nv = self.visit_Constant(v)
+            if not isinstance(nv, ast.Constant):
+                node.values[i] = ast.FormattedValue(value=nv, conversion=-1)
+                fac(node.values[i], v)
+            else:
+                node.values[i] = nv
+        elif isinstance(v, ast.FormattedValue):
+            v.value = self.visit(v.value)
+    return node
 def ras(mode: int = ZM_STR) -> aac:
     bt=bytes(ch(st2,k=rd(2,6)))
     if mode == ZM_STR: bt=bt.decode()
@@ -129,7 +141,8 @@ def befso(e,mode=ZM_STR):
     )
 def stbj(st: bytes,bn: str) -> ast.Call:
     return ast.Call(func=ast.Name(id=bn),args=[ast.List(elts=[aac(value=i) for i in st],ctx=ast.Load())],keywords=[])
-def ite(ifn):
+def ite(ifn,depth):
+    if depth>16: return ifn
     exh=ast.ExceptHandler(type=ast.Name(id="ZeroDivisionError"))
     if ifn.orelse==[]:
         exh.body=[ast.Pass()]
@@ -139,8 +152,10 @@ def ite(ifn):
 class BLD(ant):
     def __init__(self,bn: str):
         self.bn=bn
-    def visit_JoinedStr(self,node):
+    def visit_MatchValue(self,node):
         return node
+    def visit_JoinedStr(self, node):
+        return jsh(node,self)
     def visit_Constant(self, node):
         v=node.value; t=type(v)
         if t not in [str,bytes]:
@@ -152,8 +167,10 @@ class BLD(ant):
 class Stringo(ant):
     def __init__(self):
         self.vn=set()
-    def visit_JoinedStr(self,node):
+    def visit_MatchValue(self,node):
         return node
+    def visit_JoinedStr(self, node):
+        return jsh(node,self)
     def visit_Constant(self,node):
         v=node.value; t=type(v);
         if (mode:=ZM_STR if t==str else ZM_BYTE if t==bytes else -1)==-1: return node
@@ -205,6 +222,21 @@ class Namer(ant):
                     if al.asname==None:
                         al.asname=al.name
                     self.cnn(al,"asname")
+            if nt == ast.MatchAs:
+                if n.name:
+                    self.cnn(n,"name")
+            if nt == ast.MatchStar:
+                if n.name:
+                    if (n.name not in self.tfd)and(n.name not in vb):
+                        self.tfd[n.name]=rid()
+                    if n.name in self.tfd:
+                        n.name=self.tfd[n.name]
+            if nt == ast.MatchMapping:
+                if n.rest:
+                    if (n.rest not in self.tfd)and(n.rest not in vb):
+                        self.tfd[n.rest]=rid()
+                    if n.rest in self.tfd:
+                        n.rest=self.tfd[n.rest]
         return node
     def cnn(self,node,atn):
         q=getattr(node,atn)
@@ -230,11 +262,16 @@ class TSOL(ant):
         if tnv == str: nn=ast.Call(func=ast.Attribute(value=nn,attr="decode"),args=[aac(value="utf-8")],keywords=[])
         fac(nn,node)
         return nn
-    def visit_JoinedStr(self,node):
+    def visit_JoinedStr(self, node):
+        return jsh(node,self)
+    def visit_MatchValue(self,node):
         return node
 class IF2E(ant):
     def visit_If(self,node):
-        nn=ite(node)
+        d=1
+        if hasattr(node,"__depth"):
+            d=node.__depth+1
+        nn=ite(node,depth=d)
         fac(nn,node)
         return nn
 class HBF(ant):
